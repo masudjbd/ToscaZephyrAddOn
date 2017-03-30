@@ -1,0 +1,4 @@
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.dll
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.pdb
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.dll
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.pdb

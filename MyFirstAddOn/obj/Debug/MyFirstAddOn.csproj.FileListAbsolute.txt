@@ -1,0 +1,9 @@
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\MyFirstAddOn.csprojResolveAssemblyReference.cache
+C:\Users\Masud\Desktop\MyFirstAddOn.dll
+C:\Users\Masud\Desktop\MyFirstAddOn.pdb
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\MyFirstAddOn.dll
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\MyFirstAddOn.pdb
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\MyFirstAddOn.dll
+C:\dev\output\MyFirstAddOn.dll
+C:\dev\output\MyFirstAddOn.pdb
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\MyFirstAddOn.pdb
