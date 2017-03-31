@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ZephyrAddOn")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Zephyr Test Execute Tosca AddOn")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Zephyr")]
 [assembly: AssemblyProduct("ZephyrAddOn")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
