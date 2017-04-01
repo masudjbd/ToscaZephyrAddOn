@@ -5,30 +5,26 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
 using Tricentis.TCAddOns;
 using Tricentis.TCAPIObjects.Objects;
 
 namespace ZephyrAddOn
 {
-    public class DecoratedRunTask : TCAddOnTask
+    class TestCaseRunTask : TCAddOnTask
     {
+
         static HttpClient client = new HttpClient();
 
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
-
             taskContext.ShowMessageBox("Attention", "This entry will be run via an AddOnTask");
             RunAsync(objectToExecuteOn).Wait();
             return null;
-
         }
 
+        public override string Name => "PushNow";
 
-
-        public override string Name => "Execute";
-
-        public override Type ApplicableType => typeof(ExecutionEntryFolder);
+        public override Type ApplicableType => typeof(TestCase);
 
         public override bool IsTaskPossible(TCObject obj) { return true; }
 
@@ -38,6 +34,14 @@ namespace ZephyrAddOn
 
         static async Task RunAsync(TCObject objectToExecuteOn)
         {
+
+            System.Net.ServicePointManager.ServerCertificateValidationCallback +=
+           delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+                   System.Security.Cryptography.X509Certificates.X509Chain chain,
+                   System.Net.Security.SslPolicyErrors sslPolicyErrors)
+           {
+               return true;
+           };
 
             //define userName
             var USER = "test.manager";
@@ -90,8 +94,22 @@ namespace ZephyrAddOn
                     issuetype = new { name = "Test" }
                 }
             };
+            
 
-        
+           // StringContent stringContent = new StringContent(JsonConvert.SerializeObject(objectToExecuteOn).ToString(), Encoding.UTF8, "application/json");
+
+            TestCase testCase = (TestCase)objectToExecuteOn;
+            List<string> testSteps = new List<string>();
+            string testCaseName = testCase.DisplayedName;
+
+            if (testCase.Items != null && testCase.Items.Count() > 0) {
+                foreach (object obj in testCase.Items)
+                {
+                    TestStep testStep = (TestStep)obj;
+                    testSteps.Add(testStep.DisplayedName);
+                }
+            }
+ 
             try
             {
                 HttpResponseMessage response = await client.PutAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
@@ -113,7 +131,6 @@ namespace ZephyrAddOn
                 Console.WriteLine(e.Message);
             }
         }
-
 
     }
 }

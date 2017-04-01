@@ -13,7 +13,7 @@ namespace ZephyrAddOn
 
         public override string UniqueName => "ZephyrAddOn";
 
-        public override string DisplayedName => "Execute on Zephyr";
+        public override string DisplayedName => "Zephyr Options  ";
 
 
 

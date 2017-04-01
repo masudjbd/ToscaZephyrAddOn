@@ -10,9 +10,10 @@ using Newtonsoft.Json;
 
 namespace ZephyrAddOn
 {
-    class TestExecuteItem : TCAddOnMenuItem
+    class CreateIssueItem : TCAddOnMenuItem
     {
-       
+        public override bool Enabled => false;
+
         static HttpClient client = new HttpClient();
 
         public override void Execute(TCAddOnTaskContext context)
@@ -21,11 +22,10 @@ namespace ZephyrAddOn
             //context.ShowMessageBox("Test Execute", "You clicked on a menu item.");
             RunAsync().Wait();
             Console.ReadLine();
-            context.ShowMessageBox("Execute Result", "Successfully Executed on ZEE");
+            context.ShowMessageBox("Test Result", "Successfully Created Issue");
         }
-        public override string ID => "TestExecute";
-        public override string MenuText => "Test Execute";
-
+        public override string ID => "CreateIssue";
+        public override string MenuText => "Create Issue Test";
 
         
        
@@ -37,17 +37,17 @@ namespace ZephyrAddOn
                    System.Security.Cryptography.X509Certificates.X509Chain chain,
                    System.Net.Security.SslPolicyErrors sslPolicyErrors)
            {
-               return true;
-           };
+               return true;  
+            };
 
             //define userName
-            var USER = "test.manager";
+            var USER = "admin";
 
             //define passWord
-            var PASSWORD = "test.manager";
+            var PASSWORD = "ZfjCloud#1";
            
             //define Base Url
-            var BASE_URL = "http://ze5mvp.yourzephyr.com";
+            var BASE_URL = "https://test04zephyr.atlassian.net";
 
             //define ContextPath
             var CONTEXT_PATH = "/";
@@ -58,9 +58,9 @@ namespace ZephyrAddOn
             //client.DefaultRequestHeaders.Accept.Clear();
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var RELATIVE_PATH = "flex/services/rest/v1/execution/6962";
+            var RELATIVE_PATH = "rest/api/2/issue";
             var QUERY_STRING = "";
-
+ 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(USER + ":" + PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
             //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
@@ -99,8 +99,8 @@ namespace ZephyrAddOn
 
             try
             {
-                HttpResponseMessage response = await client.PutAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
-                    new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
+                HttpResponseMessage response = await client.PostAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                    new StringContent(JsonConvert.SerializeObject(issueContent).ToString(),
                             Encoding.UTF8, "application/json"));
                 response.EnsureSuccessStatusCode();
 

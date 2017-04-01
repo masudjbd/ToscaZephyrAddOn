@@ -59,9 +59,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateExecutionRunTask.cs" />
+    <Compile Include="TestCaseRunTask.cs" />
+    <Compile Include="CreateIssueItem.cs" />
     <Compile Include="ZEEConfigDialog.cs" />
     <Compile Include="ZephyrAddOn.cs" />
-    <Compile Include="DecoratedRunTask.cs" />
+    <Compile Include="ExecutionRunTask.cs" />
     <Compile Include="ZFJConfigItem.cs" />
     <Compile Include="TestExecuteItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
