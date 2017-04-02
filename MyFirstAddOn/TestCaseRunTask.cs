@@ -18,7 +18,7 @@ namespace ZephyrAddOn
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
             taskContext.ShowMessageBox("Attention", "This entry will be run via an AddOnTask");
-            RunAsync(objectToExecuteOn).Wait();
+            //RunAsync(objectToExecuteOn).Wait();
             return null;
         }
 

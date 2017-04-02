@@ -51,7 +51,7 @@ namespace ZephyrAddOn
             var PASSWORD = "test.manager";
 
             //define Base Url
-            var BASE_URL = "http://tricentis.yourzephyr.com";
+            var BASE_URL = "https://tricentis.yourzephyr.com";
 
             //define ContextPath
             var CONTEXT_PATH = "/";
@@ -67,26 +67,36 @@ namespace ZephyrAddOn
 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(USER + ":" + PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
-            //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
-            //client.DefaultRequestHeaders.Add("User-Agent", "ZAPI");
 
-            var jsonContent = new
+            ExecutionList executionList = (ExecutionList)objectToExecuteOn;
+            ExecutionListItem executionListItem = (ExecutionListItem)executionList.Items.First();
+            ExecutionList executionEntryList = executionListItem.ExecutionList;
+            ExecutionEntryFolder executionEntryFolder = (ExecutionEntryFolder)executionEntryList.Items.First();
+            List<string> testSteps = new List<string>();
+
+            string result = "-1";
+            for (int i = 0; i < executionEntryFolder.Items.Count(); i++) {
+                ExecutionEntry execItem = (ExecutionEntry)executionEntryFolder.Items.ElementAt(i);
+                ExecutionResult execResult = execItem.ActualResult;
+                if (execResult.Equals("Passed"))
+                { result = "1";}
+                else { result = "2"; }
+                testSteps.Add(execItem.DisplayedName);
+            }
+             var jsonContent = new
                 {
-                    testcaseName = "ToscaZEEAutomation",
-                    testSteps = new[] {
-                                    "Open Browser",
-                                    "Enter Login Credential"
-                                    },
-                    executionName = "Cycle 1",
-                    executionResult = true
+                    testcaseName = executionEntryList.DisplayedName,
+                    testSteps = testSteps.ToArray(),
+                    executionName = executionList.DisplayedName,
+                    executionResult = result,
+                    releaseId = "1",
+                    folderName = executionListItem.DisplayedName
                 };
 
-            jsonContent.testcaseName = "some Value";
-
-
+  
             try
             {
-                HttpResponseMessage response = await client.PutAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                HttpResponseMessage response = await client.PostAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
                     new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
                             Encoding.UTF8, "application/json"));
                 response.EnsureSuccessStatusCode();

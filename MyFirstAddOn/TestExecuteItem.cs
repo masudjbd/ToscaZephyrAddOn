@@ -19,8 +19,8 @@ namespace ZephyrAddOn
         {
 
             //context.ShowMessageBox("Test Execute", "You clicked on a menu item.");
-            RunAsync().Wait();
-            Console.ReadLine();
+            //RunAsync().Wait();
+            //Console.ReadLine();
             context.ShowMessageBox("Execute Result", "Successfully Executed on ZEE");
         }
         public override string ID => "TestExecute";
