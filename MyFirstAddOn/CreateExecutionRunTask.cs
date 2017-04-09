@@ -62,7 +62,7 @@ namespace ZephyrAddOn
             ExecutionListItem executionListItem = (ExecutionListItem)executionList.Items.First();
             ExecutionList executionEntryList = executionListItem.ExecutionList;
             ExecutionEntryFolder executionEntryFolder = (ExecutionEntryFolder)executionEntryList.Items.First();
-            List<string> testSteps = new List<string>();
+            List<Object> testCase = new List<Object>();
 
             string execStatus = "-1";
             for (int i = 0; i < executionEntryFolder.Items.Count(); i++) {
@@ -71,24 +71,34 @@ namespace ZephyrAddOn
                 if (execResult.Equals("Passed"))
                 { execStatus = "1";}
                 else { execStatus = "2"; }
-                testSteps.Add(execItem.DisplayedName);
+                List<Object> testSteps = new List<Object>();
+                TestCase testCaseItem = (TestCase)execItem.TestCase;
+                for (int j = 0; j < testCaseItem.Items.Count(); j++) {
+                    TestStep ts = (TestStep)testCaseItem.Items.ElementAt(j);
+                    var tsObj = new { name = ts.DisplayedName };
+                    testSteps.Add(tsObj);
+                }
+                var tc = new {
+                    name = execItem.DisplayedName,
+                    executionResult = execStatus,
+                    testSteps = testSteps.ToArray()
+                };
+                testCase.Add(tc);
             }
              var jsonContent = new
                 {
-                    testcaseName = executionEntryList.DisplayedName,
-                    testSteps = testSteps.ToArray(),
+                    testCases = testCase.ToArray(),
                     executionName = executionList.DisplayedName,
                     executionResult = execStatus,
                     releaseId = "1",
                     folderName = executionListItem.DisplayedName
                 };
 
-  
+            string json = JsonConvert.SerializeObject(jsonContent);
+
             try
             {
-                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
-                    new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
-                            Encoding.UTF8, ZUtil.CONTENT_TYPE_JSON));
+                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH, new StringContent(json.ToString(), Encoding.UTF8, "application/json"));
                 response.EnsureSuccessStatusCode();
 
                 //write response in console

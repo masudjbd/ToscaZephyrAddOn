@@ -18,7 +18,7 @@ namespace ZephyrAddOn
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
             taskContext.ShowMessageBox("Attention", "This entry will be run via an AddOnTask");
-            //RunAsync(objectToExecuteOn).Wait();
+            RunAsync(objectToExecuteOn).Wait();
             return null;
         }
 
@@ -50,59 +50,41 @@ namespace ZephyrAddOn
             //client.DefaultRequestHeaders.Accept.Clear();
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var RELATIVE_PATH = "flex/services/rest/v1/execution/6962";
+            var RELATIVE_PATH = "flex/services/rest/latest/testcase";
             var QUERY_STRING = "";
 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
             //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
             //client.DefaultRequestHeaders.Add("User-Agent", "ZAPI");
-            var paramContent = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("param1Value", "param1"),
-                new KeyValuePair<string, string>("param2Value", "param2"),
-                new KeyValuePair<string, string>("param3Value", "param3")
-            });
+              
 
-            var jsonContent = new
-            {
-                lastTestResult = new
-                {
-                    executionStatus = 2
-                }
-            };
+            TestCase testCases = (TestCase)objectToExecuteOn;
+            List<Object> resultTestCase = new List<Object>();
+            string testCaseName = testCases.DisplayedName;
 
-            var issueContent = new
-            {
-                //{"fields":{"project":{"key":"SAM"},"summary":"Summary sample.","description":"Desc sample.","issuetype":{"name":"Test"}}}
-                fields = new
-                {
-                    project = new { key = "SAM" },
-                    summary = "Summary from Tosca",
-                    description = "Description from Tosca",
-                    issuetype = new { name = "Test" }
-                }
-            };
-            
-
-           // StringContent stringContent = new StringContent(JsonConvert.SerializeObject(objectToExecuteOn).ToString(), Encoding.UTF8, "application/json");
-
-            TestCase testCase = (TestCase)objectToExecuteOn;
-            List<string> testSteps = new List<string>();
-            string testCaseName = testCase.DisplayedName;
-
-            if (testCase.Items != null && testCase.Items.Count() > 0) {
-                foreach (object obj in testCase.Items)
+            if (testCases.Items != null && testCases.Items.Count() > 0) {
+                List<Object> ts = new List<Object>();
+                foreach (object obj in testCases.Items)
                 {
                     TestStep testStep = (TestStep)obj;
-                    testSteps.Add(testStep.DisplayedName);
+                    var tsObj = new { name = testStep.DisplayedName, uniqueId = testStep.UniqueId };
+                    ts.Add(tsObj);
                 }
+                var testCase = new
+                {
+                    name = testCases.DisplayedName,
+                    uniqueId = testCases.UniqueId,
+                    testSteps = ts.ToArray(),
+                    tree = new { name = testCases.NodePath }
+                };
+                resultTestCase.Add(testCase);
             }
  
             try
             {
-                HttpResponseMessage response = await client.PutAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
-                    new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
+                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                    new StringContent(JsonConvert.SerializeObject(resultTestCase.ToArray()).ToString(),
                             Encoding.UTF8, ZUtil.CONTENT_TYPE_JSON));
                 response.EnsureSuccessStatusCode();
 

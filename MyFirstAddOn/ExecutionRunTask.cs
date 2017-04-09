@@ -18,8 +18,8 @@ namespace ZephyrAddOn
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
 
-            taskContext.ShowMessageBox("Attention", "This entry will be run via an AddOnTask");
-            //RunAsync(objectToExecuteOn).Wait();
+            taskContext.ShowMessageBox("Attention", "Executed selected Item");
+            RunAsync(objectToExecuteOn).Wait();
             return null;
 
         }
@@ -28,7 +28,7 @@ namespace ZephyrAddOn
 
         public override string Name => "Execute";
 
-        public override Type ApplicableType => typeof(ExecutionEntryFolder);
+        public override Type ApplicableType => typeof(ExecutionListItem);
 
         public override bool IsTaskPossible(TCObject obj) { return true; }
 
@@ -46,7 +46,7 @@ namespace ZephyrAddOn
                return true;
            };
 
-           
+
 
 
             //assign BaseUrl into http client
@@ -54,26 +54,54 @@ namespace ZephyrAddOn
             //client.DefaultRequestHeaders.Accept.Clear();
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var RELATIVE_PATH = "flex/services/rest/v1/execution/1";
+            var RELATIVE_PATH = "flex/services/rest/latest/execution/create";
             var QUERY_STRING = "";
 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
-            //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
-            //client.DefaultRequestHeaders.Add("User-Agent", "ZAPI");
-             
+
+            ExecutionListItem executionListItem = (ExecutionListItem)objectToExecuteOn;
+            ExecutionList executionEntryList = executionListItem.ExecutionList;
+            ExecutionEntryFolder executionEntryFolder = (ExecutionEntryFolder)executionEntryList.Items.First();
+            List<Object> testCase = new List<Object>();
+
+            string execStatus = "-1";
+            for (int i = 0; i < executionEntryFolder.Items.Count(); i++)
+            {
+                ExecutionEntry execItem = (ExecutionEntry)executionEntryFolder.Items.ElementAt(i);
+                ExecutionResult execResult = execItem.ActualResult;
+                if (execResult.Equals("Passed"))
+                { execStatus = "1"; }
+                else { execStatus = "2"; }
+                List<Object> testSteps = new List<Object>();
+                TestCase testCaseItem = (TestCase)execItem.TestCase;
+                for (int j = 0; j < testCaseItem.Items.Count(); j++)
+                {
+                    TestStep ts = (TestStep)testCaseItem.Items.ElementAt(j);
+                    var tsObj = new { name = ts.DisplayedName };
+                    testSteps.Add(tsObj);
+                }
+                var tc = new
+                {
+                    name = execItem.DisplayedName,
+                    executionResult = execStatus,
+                    testSteps = testSteps.ToArray()
+                };
+                testCase.Add(tc);
+            }
             var jsonContent = new
             {
-                lastTestResult = new
-                {
-                    executionStatus = 3
-                }
+                testCases = testCase.ToArray(),
+                executionName = executionListItem.DisplayedName,
+                executionResult = execStatus,
+                releaseId = "1",
+                folderName = executionListItem.DisplayedName
             };
-         
-        
+
+
             try
             {
-                HttpResponseMessage response = await client.PutAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
                     new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
                             Encoding.UTF8, ZUtil.CONTENT_TYPE_JSON));
                 response.EnsureSuccessStatusCode();
