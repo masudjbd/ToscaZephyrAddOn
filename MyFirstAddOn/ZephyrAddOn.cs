@@ -15,7 +15,7 @@ namespace ZephyrAddOn
 
         public override string DisplayedName => "Zephyr Options  ";
 
-
+        public override string AddOnIcon => "zephyr.ico";
 
     }
 }

@@ -26,10 +26,11 @@ namespace ZephyrAddOn
         public override string ID => "TestExecute";
         public override string MenuText => "Test Execute";
 
+        public override string MenuItemImageName => "zephyr.ico";
 
-        
-       
-   
+
+
+
         static async Task RunAsync()
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
@@ -40,28 +41,18 @@ namespace ZephyrAddOn
                return true;
            };
 
-            //define userName
-            var USER = "test.manager";
-
-            //define passWord
-            var PASSWORD = "test.manager";
            
-            //define Base Url
-            var BASE_URL = "http://ze5mvp.yourzephyr.com";
-
-            //define ContextPath
-            var CONTEXT_PATH = "/";
 
            
             //assign BaseUrl into http client
-            client.BaseAddress = new Uri(BASE_URL);
+            client.BaseAddress = new Uri(ZUtil.BASE_URL);
             //client.DefaultRequestHeaders.Accept.Clear();
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var RELATIVE_PATH = "flex/services/rest/v1/execution/6962";
             var QUERY_STRING = "";
 
-            String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(USER + ":" + PASSWORD));
+            String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
             //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
             //client.DefaultRequestHeaders.Add("User-Agent", "ZAPI");
@@ -99,7 +90,7 @@ namespace ZephyrAddOn
 
             try
             {
-                HttpResponseMessage response = await client.PutAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                HttpResponseMessage response = await client.PutAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
                     new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
                             Encoding.UTF8, "application/json"));
                 response.EnsureSuccessStatusCode();

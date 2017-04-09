@@ -19,5 +19,8 @@ namespace ZephyrAddOn
 
         public override string ID => "ZFJConfig";
         public override string MenuText => "ZEE Config";
+
+        public override string MenuItemImageName => "zephyr.ico";
+
     }
 }

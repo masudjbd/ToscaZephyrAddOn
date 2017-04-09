@@ -40,28 +40,18 @@ namespace ZephyrAddOn
                return true;  
             };
 
-            //define userName
-            var USER = "admin";
-
-            //define passWord
-            var PASSWORD = "ZfjCloud#1";
            
-            //define Base Url
-            var BASE_URL = "https://test04zephyr.atlassian.net";
-
-            //define ContextPath
-            var CONTEXT_PATH = "/";
 
            
             //assign BaseUrl into http client
-            client.BaseAddress = new Uri(BASE_URL);
+            client.BaseAddress = new Uri(ZUtil.BASE_URL);
             //client.DefaultRequestHeaders.Accept.Clear();
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var RELATIVE_PATH = "rest/api/2/issue";
             var QUERY_STRING = "";
  
-            String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(USER + ":" + PASSWORD));
+            String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
             //client.DefaultRequestHeaders.Add("zapiAccessKey", ACCESS_KEY);
             //client.DefaultRequestHeaders.Add("User-Agent", "ZAPI");
@@ -91,17 +81,11 @@ namespace ZephyrAddOn
                 }
             };
 
-            
-             //  new StringContent(JsonConvert.SerializeObject(issueContent).ToString(),
-             //               Encoding.UTF8, "application/json")
-              
-             
-
             try
             {
-                HttpResponseMessage response = await client.PostAsync(CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
                     new StringContent(JsonConvert.SerializeObject(issueContent).ToString(),
-                            Encoding.UTF8, "application/json"));
+                            Encoding.UTF8, ZUtil.CONTENT_TYPE_JSON));
                 response.EnsureSuccessStatusCode();
 
                 //write response in console

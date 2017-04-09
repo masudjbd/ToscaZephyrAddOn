@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ZUtil.cs" />
     <Compile Include="CreateExecutionRunTask.cs" />
     <Compile Include="TestCaseRunTask.cs" />
     <Compile Include="CreateIssueItem.cs" />
@@ -70,7 +71,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="logo.png" />
+    <Content Include="zephyr.bmp" />
+    <Content Include="zephyr.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
