@@ -13,7 +13,7 @@ namespace ZephyrAddOn
     class TestCaseRunTask : TCAddOnTask
     {
 
-        static HttpClient client = new HttpClient();
+        //static HttpClient client = new HttpClient();
 
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
@@ -34,7 +34,7 @@ namespace ZephyrAddOn
 
         static async Task RunAsync(TCObject objectToExecuteOn)
         {
-
+            HttpClient client = new HttpClient();
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
            delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
                    System.Security.Cryptography.X509Certificates.X509Chain chain,

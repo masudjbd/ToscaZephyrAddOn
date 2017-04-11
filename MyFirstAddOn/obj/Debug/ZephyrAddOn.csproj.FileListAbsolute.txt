@@ -1,9 +1,9 @@
-C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.dll
-C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.pdb
-C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.dll
-C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.pdb
-C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.csprojResolveAssemblyReference.cache
 C:\Users\Masud\Desktop\ZephyrAddOn.dll
 C:\Users\Masud\Desktop\ZephyrAddOn.pdb
 C:\Users\Masud\Desktop\ws\ZephyrAddOn.dll
 C:\Users\Masud\Desktop\ws\ZephyrAddOn.pdb
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.dll
+C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ZephyrAddOn.pdb
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.csprojResolveAssemblyReference.cache
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.dll
+C:\dev\AddOn\MyFirstAddOn\MyFirstAddOn\obj\Debug\ZephyrAddOn.pdb

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace ZephyrAddOn
 {
     public class CreateExecutionRunTask : TCAddOnTask
     {
-        static HttpClient client = new HttpClient();
+        
 
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
@@ -36,6 +37,7 @@ namespace ZephyrAddOn
 
         static async Task RunAsync(TCObject objectToExecuteOn)
         {
+             HttpClient client = new HttpClient();
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
            delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
                    System.Security.Cryptography.X509Certificates.X509Chain chain,
@@ -43,17 +45,13 @@ namespace ZephyrAddOn
            {
                return true;
            };
-            
 
-           
-
-            //assign BaseUrl into http client
+            //client.Timeout = TimeSpan.FromSeconds(10);
             client.BaseAddress = new Uri(ZUtil.BASE_URL);
-            //client.DefaultRequestHeaders.Accept.Clear();
-            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var RELATIVE_PATH = "flex/services/rest/latest/execution/create";
-            var QUERY_STRING = "";
 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
@@ -68,7 +66,7 @@ namespace ZephyrAddOn
             for (int i = 0; i < executionEntryFolder.Items.Count(); i++) {
                 ExecutionEntry execItem = (ExecutionEntry)executionEntryFolder.Items.ElementAt(i);
                 ExecutionResult execResult = execItem.ActualResult;
-                if (execResult.Equals("Passed"))
+                if (execResult.Equals(ExecutionResult.Passed))
                 { execStatus = "1";}
                 else { execStatus = "2"; }
                 List<Object> testSteps = new List<Object>();
@@ -89,8 +87,7 @@ namespace ZephyrAddOn
                 {
                     testCases = testCase.ToArray(),
                     executionName = executionList.DisplayedName,
-                    executionResult = execStatus,
-                    releaseId = "1",
+                     releaseId = "1",
                     folderName = executionListItem.DisplayedName
                 };
 
@@ -102,13 +99,16 @@ namespace ZephyrAddOn
                 response.EnsureSuccessStatusCode();
 
                 //write response in console
-                Console.WriteLine(response);
+                //Console.WriteLine(response);
 
                 // Deserialize the updated product from the response body.
-                string result = await response.Content.ReadAsStringAsync();
+                //string result = await response.Content.ReadAsStringAsync();
 
                 //write Response in console
-                Console.WriteLine(result);
+                //Console.WriteLine(result);
+               // response.Dispose();
+
+
             }
             catch (Exception e)
             {

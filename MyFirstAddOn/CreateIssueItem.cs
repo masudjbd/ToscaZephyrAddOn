@@ -14,7 +14,7 @@ namespace ZephyrAddOn
     {
         public override bool Enabled => false;
 
-        static HttpClient client = new HttpClient();
+        //static HttpClient client = new HttpClient();
 
         public override void Execute(TCAddOnTaskContext context)
         {
@@ -32,6 +32,7 @@ namespace ZephyrAddOn
    
         static async Task RunAsync()
         {
+            HttpClient client = new HttpClient();
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
            delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
                    System.Security.Cryptography.X509Certificates.X509Chain chain,

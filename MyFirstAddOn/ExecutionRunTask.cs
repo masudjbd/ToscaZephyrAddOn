@@ -13,7 +13,7 @@ namespace ZephyrAddOn
 {
     public class ExecutionRunTask : TCAddOnTask
     {
-        static HttpClient client = new HttpClient();
+        //static HttpClient client = new HttpClient();
 
         public override TCObject Execute(TCObject objectToExecuteOn, TCAddOnTaskContext taskContext)
         {
@@ -38,6 +38,7 @@ namespace ZephyrAddOn
 
         static async Task RunAsync(TCObject objectToExecuteOn)
         {
+            HttpClient client = new HttpClient();
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
            delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
                    System.Security.Cryptography.X509Certificates.X509Chain chain,
@@ -55,7 +56,7 @@ namespace ZephyrAddOn
             //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var RELATIVE_PATH = "flex/services/rest/latest/execution/create";
-            var QUERY_STRING = "";
+
 
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(ZUtil.USER + ":" + ZUtil.PASSWORD));
             client.DefaultRequestHeaders.Add("Authorization", "Basic " + encoded);
@@ -93,7 +94,6 @@ namespace ZephyrAddOn
             {
                 testCases = testCase.ToArray(),
                 executionName = executionListItem.DisplayedName,
-                executionResult = execStatus,
                 releaseId = "1",
                 folderName = executionListItem.DisplayedName
             };
@@ -101,19 +101,22 @@ namespace ZephyrAddOn
 
             try
             {
-                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH + "?" + QUERY_STRING,
+                HttpResponseMessage response = await client.PostAsync(ZUtil.CONTEXT_PATH + RELATIVE_PATH,
                     new StringContent(JsonConvert.SerializeObject(jsonContent).ToString(),
                             Encoding.UTF8, ZUtil.CONTENT_TYPE_JSON));
                 response.EnsureSuccessStatusCode();
 
                 //write response in console
-                Console.WriteLine(response);
+               // Console.WriteLine(response);
 
                 // Deserialize the updated product from the response body.
                 string result = await response.Content.ReadAsStringAsync();
 
                 //write Response in console
-                Console.WriteLine(result);
+                //Console.WriteLine(result);
+
+                //response.Dispose();
+
             }
             catch (Exception e)
             {
